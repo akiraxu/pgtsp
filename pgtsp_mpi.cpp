@@ -228,11 +228,12 @@ int main(int argc,char* argv[]){
 	double wtime;
 
     initEverything(stoi(argv[1]), stoi(argv[2]), stoi(argv[3]), stoi(argv[4]), stof(argv[5]), stof(argv[6]), stof(argv[7]));
-    paramD = new int[paramN * paramN];
 
 	MPI::Init(argc, argv); //  Initialize MPI.
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
+    
+    paramD = new int[paramN * paramN];
     
     if(id = 0){
         string fn(argv[8]);
