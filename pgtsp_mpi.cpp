@@ -246,6 +246,8 @@ int main(int argc,char* argv[]){
         }
     }
 
+    cout << paramN << " " << paramM << " " << paramK << " " << paramR << " " << paramS << " " << paramU << " " << paramZ << endl;
+
     int params[7] = {paramN, paramM, paramK, paramR, paramS, paramU, paramZ};
 
     for(int i = 0; i < 7; i++){
