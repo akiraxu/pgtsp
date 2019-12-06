@@ -235,7 +235,7 @@ int main(int argc,char* argv[]){
     
     paramD = new int[paramN * paramN];
     
-    if(id = 0){
+    if(id == 0){
         string fn(argv[8]);
         ifstream in(fn);
         int n = 0;
