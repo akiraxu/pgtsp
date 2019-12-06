@@ -248,6 +248,10 @@ int main(int argc,char* argv[]){
 
     int params[7] = {paramN, paramM, paramK, paramR, paramS, paramU, paramZ};
 
+    for(int i = 0; i < 7; i++){
+        cout << params[i];
+    }
+
     MPI_Bcast(&params,7,MPI_INT,0,MPI_COMM_WORLD);
     setParams(params);
 
