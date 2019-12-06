@@ -22,6 +22,8 @@ int paramZ; // mutated pairs
 default_random_engine *gen;
 
 void initEverything(int n, int m, int k, int r, float s, float u, float z){
+    srand(time(NULL));
+    gen = new default_random_engine(rand());
     paramN = n;
     paramM = m;
     paramK = k;
@@ -248,18 +250,8 @@ int main(int argc,char* argv[]){
         }
     }
 
-    cout << paramN << " " << paramM << " " << paramK << " " << paramR << " " << paramS << " " << paramU << " " << paramZ << endl;
+    cout << "id" << id << ": " << paramN << " " << paramM << " " << paramK << " " << paramR << " " << paramS << " " << paramU << " " << paramZ << endl;
 
-    int params[7] = {paramN, paramM, paramK, paramR, paramS, paramU, paramZ};
-
-    for(int i = 0; i < 7; i++){
-        cout << params[i];
-    }
-
-    MPI_Bcast(&params,7,MPI_INT,0,MPI_COMM_WORLD);
-    setParams(params);
-
-    cout << paramN << " " << paramM << " " << paramK << " " << paramR << " " << paramS << " " << paramU << " " << paramZ << endl;
 
     if(id != 0){
         paramD = new int[paramN * paramN];
