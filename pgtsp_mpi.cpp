@@ -228,14 +228,13 @@ int main(int argc,char* argv[]){
 	double wtime;
 
     initEverything(stoi(argv[1]), stoi(argv[2]), stoi(argv[3]), stoi(argv[4]), stof(argv[5]), stof(argv[6]), stof(argv[7]));
+    paramD = new int[paramN * paramN];
 
 	MPI::Init(argc, argv); //  Initialize MPI.
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
     
     if(id = 0){
-        //initEverything(stoi(argv[1]), stoi(argv[2]), stoi(argv[3]), stoi(argv[4]), stof(argv[5]), stof(argv[6]), stof(argv[7]));
-        paramD = new int[paramN * paramN];
         string fn(argv[8]);
         ifstream in(fn);
         int n = 0;
@@ -250,13 +249,7 @@ int main(int argc,char* argv[]){
         }
     }
 
-    cout << "id" << id << ": " << paramN << " " << paramM << " " << paramK << " " << paramR << " " << paramS << " " << paramU << " " << paramZ << endl;
-
-
-    if(id != 0){
-        paramD = new int[paramN * paramN];
-    }
-    MPI_Bcast(paramD, paramN * paramN,MPI_INT,0,MPI_COMM_WORLD);
+    MPI_Bcast(paramD,paramN * paramN,MPI_INT,0,MPI_COMM_WORLD);
 
     int *paths = new int[paramN * paramM];
     int *paths2 = new int[paramN * paramM];
