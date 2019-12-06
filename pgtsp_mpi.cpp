@@ -314,4 +314,6 @@ int main(int argc,char* argv[]){
         cout << minPath[i] << " ";
     }
     cout << endl;
+
+    MPI::Finalize();
 }
