@@ -251,6 +251,8 @@ int main(int argc,char* argv[]){
     MPI_Bcast(&params,7,MPI_INT,0,MPI_COMM_WORLD);
     setParams(params);
 
+    cout << paramN << " " << paramM << " " << paramK << " " << paramR << " " << paramS << " " << paramU << " " << paramZ << endl;
+
     if(id != 0){
         paramD = new int[paramN * paramN];
     }
