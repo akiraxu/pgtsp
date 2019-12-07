@@ -318,7 +318,7 @@ int getGlobalMin(int min, int *minPath, int *gMinPath){
         if(recvMin[i * (paramN + 1)] < gMin){
             gMin = recvMin[i * (paramN + 1)];
             for(int j = 0; i < paramN; j++){
-                gMinPath[j] = recvMin[i * (paramN + 1) + j + 1];
+                //gMinPath[j] = recvMin[i * (paramN + 1) + j + 1];
             }
         }
         if(myID==0){cout << recvMin[i] << " ";}
