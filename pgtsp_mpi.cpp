@@ -306,7 +306,7 @@ int getGlobalMin(int min, int *minPath, int *gMinPath){
         sendMin[i * (paramN + 1)] = min;
         len[i] = paramN + 1;
         offset[i] = i * (paramN + 1);
-        for(int j = 0; i < paramN; j++){
+        for(int j = 0; j < paramN; j++){
             sendMin[i * (paramN + 1) + j + 1] = minPath[j];
         }
     }
@@ -318,7 +318,7 @@ int getGlobalMin(int min, int *minPath, int *gMinPath){
     for(int i = 0; i < paramP; i++){
         if(recvMin[i * (paramN + 1)] < gMin){
             gMin = recvMin[i * (paramN + 1)];
-            for(int j = 0; i < paramN; j++){
+            for(int j = 0; j < paramN; j++){
                 gMinPath[j] = recvMin[i * (paramN + 1) + j + 1];
             }
         }
