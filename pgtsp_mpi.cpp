@@ -363,7 +363,8 @@ int main(int argc,char* argv[]){
 
         if(countE == 0){
             countK++;
-            //int t = getGlobalMin(min);
+            int t;
+            //t = getGlobalMin(min);
             if(t == gMin){
                 countR++;
             }else{
