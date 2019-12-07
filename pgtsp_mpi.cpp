@@ -284,7 +284,7 @@ int getGlobalMin(int min){
     if(myID==0){cout << "current round mins: ";}
     for(int i = 0; i < paramP; i++){
         if(recvMin[i] < gMin){
-            gMin = recvMin[i]
+            gMin = recvMin[i];
         }
         if(myID==0){cout << recvMin[i] << " ";}
     }
