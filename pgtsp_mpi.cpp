@@ -39,7 +39,7 @@ void initRand(int d){
     unsigned long long int k = time(NULL);
     k = ((k * (d + 1)) ^ 3) % time(NULL);
     srand(k);
-    rand();
+    cout << id << ":" << rand() << endl;
     gen = new default_random_engine(rand());
 }
 
@@ -411,6 +411,7 @@ int main(int argc,char* argv[]){
             if(countR >= paramR || countK >= paramK){
                 break;
             }
+            doExchange(paths);
         }
 
         //cout << "Current round min distance: " << currmin << ", all time min: " << min << ", keep for " << countR << " rounds." << endl;
