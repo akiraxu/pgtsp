@@ -13,12 +13,14 @@ using namespace std;
 
 int paramN; //# of sites
 int *paramD; // Distance matrix
-int paramM;
+int paramM; //Population
 int paramK; //Max round
 int paramR; //No change for
 int paramS; //# of survivors
 int paramU; //# of mutated individuals
-int paramZ; // mutated pairs
+int paramZ; //Mutated pairs
+int paramE; //Exchange once how many round
+int paramP; //How many processes
 default_random_engine *gen;
 
 void initEverything(int n, int m, int k, int r, float s, float u, float z){
@@ -172,7 +174,7 @@ void selection(int *distances, int *survivors){
         survivors[i] = n;
         used.insert(n);
     }
-    cout << "avg try per survivor: " << 1.0 * tries / paramS << endl;
+    //cout << "avg try per survivor: " << 1.0 * tries / paramS << endl;
 }
 
 void copySelection(int *from, int *to, int *survivors){
@@ -221,6 +223,74 @@ int minDistanceIndex(int *arr){
     return index;
 }
 
+void randomExchangeList(int *list){
+    for(int i = 0; i < paramM / (paramP * paramP); i++){
+        int r = -1;
+        while(used.count(r = randInt() % paramM)){}
+        used.insert(r);
+        list[i] = r;
+    }
+}
+
+void getOneExchange(int *paths, int *ex){
+    unordered_set<int> used;
+    int *k = new int[paramM / (paramP * paramP)];
+    randomExchangeList(k);
+    for(int i = 0; i < paramM / (paramP * paramP); i++){
+        for(int j = 0; j < paramN; j++){
+            ex[i * paramN + j] = paths[k[i] * paramN + j];
+        }
+    }
+}
+
+void setOneExchange(int *paths, int *ex){
+    unordered_set<int> used;
+    int *k = new int[paramM / (paramP * paramP)];
+    randomExchangeList(k);
+    for(int i = 0; i < paramM / (paramP * paramP); i++){
+        for(int j = 0; j < paramN; j++){
+            paths[k[i] * paramN + j] = ex[i * paramN + j];
+        }
+    }
+}
+
+void getExchange(int *paths, int *ex){
+    for(int i = 0; i < (paramM / (paramP * paramP)) * paramN; i += paramN){
+        getOneExchange(paths, ex + i);
+    }
+}
+
+void setExchange(int *paths, int *ex){
+    for(int i = 0; i < (paramM / (paramP * paramP)) * paramN; i += paramN){
+        setOneExchange(paths, ex + i);
+    }
+}
+
+int getGlobalMin(int min){
+    int *sendMin = new int[paramP];
+    int *recvMin = new int[paramP];
+    int *len = new int[paramP];
+    int *offset = new int[paramP];
+
+    for(int i = 0; i < paramP; i++){
+        sendMin[i] = min;
+        len[i] = 1;
+        offset[i] = i;
+    }
+
+    MPI_Alltoallv(sendMin,len,offset,MPI_INT,recvMin,len,offset,MPI_INT,MPI_COMM_WORLD);
+    int gMin = recvMin[0];
+    if(id==0){cout << "current round mins: ";}
+    for(int i = 0; i < paramP; i++){
+        if(recvMin[i] < gMin){
+            gMin = recvMin[i]
+        }
+        if(id==0){cout << recvMin[i] << " ";}
+    }
+    if(id==0){cout << "with global min: " << gMin << endl;}
+    return gMin;
+}
+
 int main(int argc,char* argv[]){
 
     int id;
@@ -234,6 +304,7 @@ int main(int argc,char* argv[]){
 	id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
     
     paramD = new int[paramN * paramN];
+    paramP = p;
     
     if(id == 0){
         string fn(argv[8]);
@@ -265,11 +336,15 @@ int main(int argc,char* argv[]){
 
     int min = -1;
 
+    int gMin = -1;
+
     int * minPath = new int[paramN];
 
     int countR = 0;
+    int countK = 0;
+    int countE = 0;
 
-    for(int whatever = 0; whatever < paramK; whatever++){
+    while(true){
         for(int i = 0; i < paramM; i++){
             distances[i] = roundDistance(paths + i * paramN);
         }
@@ -278,19 +353,28 @@ int main(int argc,char* argv[]){
 
         if(min == -1 || currmin < min){
             min = currmin;
-            countR = 0;
             for(int i = 0; i < paramN; i++){
                 minPath[i] = paths[currmin * paramN + i];
             }
-        }else{
-            countR++; 
         }
 
-        if(countR > paramR){
-            break;
+        countE = (countE + 1) % paramE;
+
+        if(countE == 0){
+            countK++;
+            int t = getGlobalMin(min);
+            if(t == gMin){
+                countR++;
+            }else{
+                gMin = t;
+                countR = 0;
+            }
+            if(countR >= paramR || countK >= paramK){
+                break;
+            }
         }
 
-        cout << "Current round min distance: " << currmin << ", all time min: " << min << ", keep for " << countR << " rounds." << endl;
+        //cout << "Current round min distance: " << currmin << ", all time min: " << min << ", keep for " << countR << " rounds." << endl;
 
         selection(distances, survivors);
 
