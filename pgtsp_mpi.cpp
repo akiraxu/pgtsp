@@ -295,16 +295,19 @@ void doExchange(int *paths){
     delete[] offset;
 }
 
-int getGlobalMin(int min, int *gMinPath){
+int getGlobalMin(int min, int *minPath, int *gMinPath){
     int *sendMin = new int[paramP * (paramN + 1)];
     int *recvMin = new int[paramP * (paramN + 1)];
     int *len = new int[paramP];
     int *offset = new int[paramP];
 
     for(int i = 0; i < paramP; i++){
-        sendMin[i] = min;
+        sendMin[i * (paramN + 1)] = min;
         len[i] = paramN + 1;
         offset[i] = i * (paramN + 1);
+        for(int j = 0; i < paramN; j++){
+            sendMin[i * (paramN + 1) + j + 1] = minPath[j];
+        }
     }
 
     //cout << "proc" << myID << " mins: " << min << endl;
@@ -315,7 +318,7 @@ int getGlobalMin(int min, int *gMinPath){
         if(recvMin[i * (paramN + 1)] < gMin){
             gMin = recvMin[i * (paramN + 1)];
             for(int j = 0; i < paramN; j++){
-                //gMinPath[j] = recvMin[i * (paramN + 1) + j + 1];
+                gMinPath[j] = recvMin[i * (paramN + 1) + j + 1];
             }
         }
         if(myID==0){cout << recvMin[i] << " ";}
@@ -404,7 +407,7 @@ int main(int argc,char* argv[]){
 
         if(countE == 0){
             countK++;
-            int t = getGlobalMin(min, gMinPath);
+            int t = getGlobalMin(min, minPath, gMinPath);
             if(t == gMin){
                 countR++;
             }else{
