@@ -249,6 +249,7 @@ void getOneExchange(int *paths, int *ex){
             ex[i * paramN + j] = paths[k[i] * paramN + j];
         }
     }
+    delete[] k;
 }
 
 void setOneExchange(int *paths, int *ex){
@@ -260,6 +261,7 @@ void setOneExchange(int *paths, int *ex){
             paths[k[i] * paramN + j] = ex[i * paramN + j];
         }
     }
+    delete[] k;
 }
 
 void getExchange(int *paths, int *ex){
@@ -272,6 +274,26 @@ void setExchange(int *paths, int *ex){
     for(int i = 0; i < (paramM / (paramP * paramP)) * paramN; i += paramN){
         setOneExchange(paths, ex + i);
     }
+}
+
+void doExchange(int *paths){
+    int amount = paramM / (paramP * paramP);
+    int *exGet = new int[(paramM / (paramP * paramP)) * paramP];
+    int *exSet = new int[(paramM / (paramP * paramP)) * paramP];
+    int *len = new int[paramP];
+    int *offset = new int[paramP];
+    for(int i = 0; i < paramP; i++){
+        len[i] = paramM / (paramP * paramP);
+        offset[i] = (paramM / (paramP * paramP)) * i;
+    }
+
+    getExchange(paths, exGet);
+    MPI_Alltoallv(exGet,len,offset,MPI_INT,exSet,len,offset,MPI_INT,MPI_COMM_WORLD);
+    getExchange(paths, exSet);
+    delete[] exGet;
+    delete[] exSet;
+    delete[] len;
+    delete[] offset;
 }
 
 int getGlobalMin(int min){
@@ -297,6 +319,12 @@ int getGlobalMin(int min){
         if(myID==0){cout << recvMin[i] << " ";}
     }
     if(myID==0){cout << "with global min: " << gMin << endl;}
+
+    delete[] sendMin;
+    delete[] recvMin;
+    delete[] len;
+    delete[] offset;
+
     return gMin;
 }
 
