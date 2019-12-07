@@ -5,7 +5,7 @@
 #include <streambuf>
 #include <math.h>
 #include <random>
-#include <time.h>
+#include <sys/time.h>
 #include <unordered_set>
 #include "mpi.h"
 
