@@ -36,9 +36,9 @@ void initEverything(int n, int m, int k, int r, float s, float u, float z, int e
 }
 
 void initRand(int d){
-    timeval time;
-    gettimeofday(&time, NULL);
-    srand(time.tv_usec % (time(NULL) + d));
+    timeval t;
+    gettimeofday(&t, NULL);
+    srand(t.tv_usec % (time(NULL) + d));
     cout << d << ":" << rand() << endl;
     gen = new default_random_engine(rand());
 }
