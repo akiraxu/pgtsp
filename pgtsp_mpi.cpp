@@ -294,7 +294,7 @@ void doExchange(int *paths){
     int *len = new int[paramP];
     int *offset = new int[paramP];
     for(int i = 0; i < paramP; i++){
-        len[i] = paramM / (paramP * paramP) * paramN;
+        len[i] = (paramM / (paramP * paramP)) * paramN;
         offset[i] = (paramM / (paramP * paramP)) * paramN * i;
     }
 
@@ -353,6 +353,8 @@ int main(int argc,char* argv[]){
 
     initEverything(stoi(argv[1]), stoi(argv[2]), stoi(argv[3]), stoi(argv[4]), stof(argv[5]), stof(argv[6]), stof(argv[7]), stoi(argv[8]));
 
+    cout << paramN << " " << paramM << " " << paramK << " " << paramR << " " << paramS << " " << paramU << " " << paramZ << endl;
+    
 	MPI::Init(argc, argv); //  Initialize MPI.
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
@@ -431,7 +433,7 @@ int main(int argc,char* argv[]){
             if(countR >= paramR || countK >= paramK){
                 break;
             }
-            //doExchange(paths);
+            doExchange(paths);
         }
 
         //cout << "Current round min distance: " << currmin << ", all time min: " << min << ", keep for " << countR << " rounds." << endl;
