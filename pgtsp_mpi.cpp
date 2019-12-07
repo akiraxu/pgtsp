@@ -24,7 +24,7 @@ int paramP; //How many processes
 int myID;
 default_random_engine *gen;
 
-void initEverything(int n, int m, int k, int r, float s, float u, float z){
+void initEverything(int n, int m, int k, int r, float s, float u, float z, int e){
     srand(time(NULL));
     gen = new default_random_engine(rand());
     paramN = n;
@@ -34,6 +34,7 @@ void initEverything(int n, int m, int k, int r, float s, float u, float z){
     paramS = s * paramM;
     paramU = u * paramM;
     paramZ = z * paramN;
+    paramE = e;
 }
 
 void setParams(int *arr){
@@ -298,7 +299,7 @@ int main(int argc,char* argv[]){
 	int p;
 	double wtime;
 
-    initEverything(stoi(argv[1]), stoi(argv[2]), stoi(argv[3]), stoi(argv[4]), stof(argv[5]), stof(argv[6]), stof(argv[7]));
+    initEverything(stoi(argv[1]), stoi(argv[2]), stoi(argv[3]), stoi(argv[4]), stof(argv[5]), stof(argv[6]), stof(argv[7]), stoi(argv[8]));
 
 	MPI::Init(argc, argv); //  Initialize MPI.
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
@@ -308,7 +309,7 @@ int main(int argc,char* argv[]){
     paramP = p;
     
     if(id == 0){
-        string fn(argv[8]);
+        string fn(argv[9]);
         ifstream in(fn);
         int n = 0;
         while(!in.eof())
@@ -363,8 +364,7 @@ int main(int argc,char* argv[]){
 
         if(countE == 0){
             countK++;
-            int t;
-            //t = getGlobalMin(min);
+            int t = getGlobalMin(min);
             if(t == gMin){
                 countR++;
             }else{
