@@ -270,13 +270,14 @@ int main(int argc,char* argv[]){
             distances[i] = roundDistance(paths + i * paramN);
         }
         
-        int currmin = distances[minDistanceIndex(paths)];
+        int currminindex = minDistanceIndex(paths);
+        int currmin = distances[currminindex];
 
         if(min == -1 || currmin < min){
             min = currmin;
             countR = 0;
             for(int i = 0; i < paramN; i++){
-                minPath[i] = paths[currmin * paramN + i];
+                minPath[i] = paths[currminindex * paramN + i];
             }
         }else{
             countR++; 
