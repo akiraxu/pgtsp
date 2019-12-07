@@ -295,16 +295,16 @@ void doExchange(int *paths){
     delete[] offset;
 }
 
-int getGlobalMin(int min){
-    int *sendMin = new int[paramP];
-    int *recvMin = new int[paramP];
+int getGlobalMin(int min, int *gMinPath){
+    int *sendMin = new int[paramP * (paramN + 1)];
+    int *recvMin = new int[paramP * (paramN + 1)];
     int *len = new int[paramP];
     int *offset = new int[paramP];
 
     for(int i = 0; i < paramP; i++){
         sendMin[i] = min;
-        len[i] = 1;
-        offset[i] = i;
+        len[i] = paramN + 1;
+        offset[i] = i * (paramN + 1);
     }
 
     //cout << "proc" << myID << " mins: " << min << endl;
@@ -312,8 +312,11 @@ int getGlobalMin(int min){
     int gMin = recvMin[0];
     if(myID==0){cout << "current round mins: ";}
     for(int i = 0; i < paramP; i++){
-        if(recvMin[i] < gMin){
-            gMin = recvMin[i];
+        if(recvMin[i * (paramN + 1)] < gMin){
+            gMin = recvMin[i * (paramN + 1)];
+            for(int j = 0; i < paramN; j++){
+                gMinPath[j] = recvMin[i * (paramN + 1) + j + 1];
+            }
         }
         if(myID==0){cout << recvMin[i] << " ";}
     }
@@ -377,6 +380,7 @@ int main(int argc,char* argv[]){
     int gMin = -1;
 
     int * minPath = new int[paramN];
+    int * gMinPath = new int[paramN];
 
     int countR = 0;
     int countK = 0;
@@ -400,7 +404,7 @@ int main(int argc,char* argv[]){
 
         if(countE == 0){
             countK++;
-            int t = getGlobalMin(min);
+            int t = getGlobalMin(min, gMinPath);
             if(t == gMin){
                 countR++;
             }else{
@@ -428,11 +432,13 @@ int main(int argc,char* argv[]){
         doMutation(paths);
     }
     
-    cout << "min path: ";
-    for(int i = 0; i < paramN; i++){
-        cout << minPath[i] << " ";
+    if(id == 0){
+        cout << "min path: ";
+        for(int i = 0; i < paramN; i++){
+            cout << gMinPath[i] << " ";
+        }
+        cout << endl;
     }
-    cout << endl;
 
     MPI::Finalize();
 }
