@@ -296,6 +296,7 @@ void doExchange(int *paths){
 }
 
 int getGlobalMin(int min, int *minPath, int *gMinPath){
+    cout << myID << "in" << endl;
     int *sendMin = new int[paramP * (paramN + 1)];
     int *recvMin = new int[paramP * (paramN + 1)];
     int *len = new int[paramP];
@@ -330,6 +331,7 @@ int getGlobalMin(int min, int *minPath, int *gMinPath){
     delete[] len;
     delete[] offset;
 
+    cout << myID << "out" << endl;
     return gMin;
 }
 
