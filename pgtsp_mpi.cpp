@@ -25,8 +25,6 @@ int myID;
 default_random_engine *gen;
 
 void initEverything(int n, int m, int k, int r, float s, float u, float z, int e){
-    srand(time(NULL));
-    gen = new default_random_engine(rand());
     paramN = n;
     paramM = m;
     paramK = k;
@@ -35,6 +33,13 @@ void initEverything(int n, int m, int k, int r, float s, float u, float z, int e
     paramU = u * paramM;
     paramZ = z * paramN;
     paramE = e;
+}
+
+void initRand(int d){
+    unsigned long long int k = time(NULL);
+    k = ((k * (d + 1)) ^ 3) % time(NULL);
+    srand(k);
+    gen = new default_random_engine(rand());
 }
 
 void setParams(int *arr){
@@ -305,6 +310,8 @@ int main(int argc,char* argv[]){
 	MPI::Init(argc, argv); //  Initialize MPI.
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
+
+    initRand(id);
     
     paramD = new int[paramN * paramN];
     paramP = p;
