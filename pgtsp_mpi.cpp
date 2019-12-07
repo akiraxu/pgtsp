@@ -39,6 +39,7 @@ void initRand(int d){
     unsigned long long int k = time(NULL);
     k = ((k * (d + 1)) ^ 3) % time(NULL);
     srand(k);
+    cout << d << ":" << rand();
     gen = new default_random_engine(rand());
 }
 
