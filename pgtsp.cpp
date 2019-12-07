@@ -7,6 +7,7 @@
 #include <random>
 #include <time.h>
 #include <unordered_set>
+#include "mpi.h"
 
 using namespace std;
 
@@ -248,6 +249,15 @@ int main(int argc,char* argv[]){
         exit(-1);
     }
 
+    int id;
+	int p;
+	double wtime;
+    MPI::Init(argc, argv); //  Initialize MPI.
+	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
+	id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
+
+    wtime = MPI::Wtime();
+
     int *paths = new int[paramN * paramM];
     int *paths2 = new int[paramN * paramM];
     int *distances = new int[paramM];
@@ -307,4 +317,11 @@ int main(int argc,char* argv[]){
         cout << minPath[i] << " ";
     }
     cout << endl;
+
+
+    wtime = MPI::Wtime() - wtime;
+    cout << "  Elapsed wall clock time = " << wtime << " seconds.\n";
+
+    MPI::Finalize();
+
 }
