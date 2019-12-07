@@ -45,7 +45,6 @@ void updateM(int m){
     paramM = m;
     paramS = ss * paramM;
     paramU = uu * paramM;
-    paramZ = zz * paramN;
 }
 
 void initRand(int d){
@@ -359,6 +358,7 @@ int main(int argc,char* argv[]){
 	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
 
     updateM(paramM/p);
+
     initRand(id);
     
     paramD = new int[paramN * paramN];
