@@ -410,7 +410,7 @@ int main(int argc,char* argv[]){
             distances[i] = roundDistance(paths + i * paramN);
         }
         cout << myID << "dist2" << endl;
-        int currminindex = minDistanceIndex(paths)
+        int currminindex = minDistanceIndex(paths);
         int currmin = distances[currminindex];
 
         cout << myID << "min1" << currmin << endl;
