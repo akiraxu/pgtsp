@@ -277,14 +277,13 @@ void setExchange(int *paths, int *ex){
 }
 
 void doExchange(int *paths){
-    int amount = paramM / (paramP * paramP);
-    int *exGet = new int[(paramM / (paramP * paramP)) * paramP];
-    int *exSet = new int[(paramM / (paramP * paramP)) * paramP];
+    int *exGet = new int[(paramM / (paramP * paramP)) * paramP * paramN];
+    int *exSet = new int[(paramM / (paramP * paramP)) * paramP * paramN];
     int *len = new int[paramP];
     int *offset = new int[paramP];
     for(int i = 0; i < paramP; i++){
-        len[i] = paramM / (paramP * paramP);
-        offset[i] = (paramM / (paramP * paramP)) * i;
+        len[i] = paramM / (paramP * paramP) * paramN;
+        offset[i] = (paramM / (paramP * paramP)) * paramN * i;
     }
 
     getExchange(paths, exGet);
