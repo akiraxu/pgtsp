@@ -358,7 +358,7 @@ int main(int argc,char* argv[]){
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
 
-    //updateM(paramM/p);
+    updateM(paramM/p);
 
     initRand(id);
     
@@ -405,22 +405,19 @@ int main(int argc,char* argv[]){
     int countE = 0;
 
     while(true){
-        cout << myID << "dist1" << endl;
         for(int i = 0; i < paramM; i++){
             distances[i] = roundDistance(paths + i * paramN);
         }
-        cout << myID << "dist2" << endl;
+        
         int currminindex = minDistanceIndex(paths);
         int currmin = distances[currminindex];
 
-        cout << myID << "min1" << currmin << endl;
         if(min == -1 || currmin < min){
             min = currmin;
             for(int i = 0; i < paramN; i++){
                 minPath[i] = paths[currminindex * paramN + i];
             }
         }
-        cout << myID << "min2" << endl;
         
         countE = (countE + 1) % paramE;
 
@@ -442,24 +439,17 @@ int main(int argc,char* argv[]){
         //cout << "Current round min distance: " << currmin << ", all time min: " << min << ", keep for " << countR << " rounds." << endl;
 
         
-        cout << myID << "sel1" << endl;
         selection(distances, survivors);
-        cout << myID << "sel2" << endl;
 
         int *tempPtr = paths;
         paths = paths2;
         paths2 = tempPtr;
 
-        cout << myID << "cp1" << endl;
         copySelection(paths2, paths, survivors);
-        cout << myID << "cp2" << endl;
 
-        cout << myID << "co1" << endl;
         fillCrossover(paths);
-        cout << myID << "co2" << endl;
-        cout << myID << "mut1" << endl;
+
         doMutation(paths);
-        cout << myID << "mut2" << endl;
     }
     
     if(id == 0){
