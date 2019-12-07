@@ -280,6 +280,7 @@ int getGlobalMin(int min){
         offset[i] = i;
     }
 
+    cout << "proc" << myID << " mins: " << min << endl;
     MPI_Alltoallv(sendMin,len,offset,MPI_INT,recvMin,len,offset,MPI_INT,MPI_COMM_WORLD);
     int gMin = recvMin[0];
     if(myID==0){cout << "current round mins: ";}
