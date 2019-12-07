@@ -416,7 +416,7 @@ int main(int argc,char* argv[]){
         if(min == -1 || currmin < min){
             min = currmin;
             for(int i = 0; i < paramN; i++){
-                minPath[i] = paths[currmin * paramN + i];
+                minPath[i] = paths[min * paramN + i];
             }
         }
         cout << myID << "min2" << endl;
