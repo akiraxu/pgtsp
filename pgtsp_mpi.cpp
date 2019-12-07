@@ -22,6 +22,8 @@ int paramZ; //Mutated pairs
 int paramE; //Exchange once how many round
 int paramP; //How many processes
 int myID;
+
+float ss, uu, zz;
 default_random_engine *gen;
 
 void initEverything(int n, int m, int k, int r, float s, float u, float z, int e){
@@ -33,6 +35,17 @@ void initEverything(int n, int m, int k, int r, float s, float u, float z, int e
     paramU = u * paramM;
     paramZ = z * paramN;
     paramE = e;
+
+    ss = s;
+    uu = u;
+    zz = z;
+}
+
+void updateM(int m){
+    paramM = m;
+    paramS = ss * paramM;
+    paramU = uu * paramM;
+    paramZ = zz * paramN;
 }
 
 void initRand(int d){
@@ -345,6 +358,7 @@ int main(int argc,char* argv[]){
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
 
+    updateM(paramM/p);
     initRand(id);
     
     paramD = new int[paramN * paramN];
