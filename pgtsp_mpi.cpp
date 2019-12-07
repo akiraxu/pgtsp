@@ -412,7 +412,7 @@ int main(int argc,char* argv[]){
         cout << myID << "dist2" << endl;
         int currmin = distances[minDistanceIndex(paths)];
 
-        cout << myID << "min1" << endl;
+        cout << myID << "min1" << currmin << endl;
         if(min == -1 || currmin < min){
             min = currmin;
             for(int i = 0; i < paramN; i++){
