@@ -21,6 +21,7 @@ int paramU; //# of mutated individuals
 int paramZ; //Mutated pairs
 int paramE; //Exchange once how many round
 int paramP; //How many processes
+int myID;
 default_random_engine *gen;
 
 void initEverything(int n, int m, int k, int r, float s, float u, float z){
@@ -224,6 +225,7 @@ int minDistanceIndex(int *arr){
 }
 
 void randomExchangeList(int *list){
+    unordered_set<int> used;
     for(int i = 0; i < paramM / (paramP * paramP); i++){
         int r = -1;
         while(used.count(r = randInt() % paramM)){}
@@ -233,7 +235,6 @@ void randomExchangeList(int *list){
 }
 
 void getOneExchange(int *paths, int *ex){
-    unordered_set<int> used;
     int *k = new int[paramM / (paramP * paramP)];
     randomExchangeList(k);
     for(int i = 0; i < paramM / (paramP * paramP); i++){
@@ -280,14 +281,14 @@ int getGlobalMin(int min){
 
     MPI_Alltoallv(sendMin,len,offset,MPI_INT,recvMin,len,offset,MPI_INT,MPI_COMM_WORLD);
     int gMin = recvMin[0];
-    if(id==0){cout << "current round mins: ";}
+    if(myID==0){cout << "current round mins: ";}
     for(int i = 0; i < paramP; i++){
         if(recvMin[i] < gMin){
             gMin = recvMin[i]
         }
-        if(id==0){cout << recvMin[i] << " ";}
+        if(myID==0){cout << recvMin[i] << " ";}
     }
-    if(id==0){cout << "with global min: " << gMin << endl;}
+    if(myID==0){cout << "with global min: " << gMin << endl;}
     return gMin;
 }
 
@@ -301,7 +302,7 @@ int main(int argc,char* argv[]){
 
 	MPI::Init(argc, argv); //  Initialize MPI.
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
-	id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
+	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
     
     paramD = new int[paramN * paramN];
     paramP = p;
