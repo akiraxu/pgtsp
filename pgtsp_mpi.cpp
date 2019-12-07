@@ -357,9 +357,11 @@ int main(int argc,char* argv[]){
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
 
-    //updateM(paramM/p);
+    updateM(paramM/p);
 
     initRand(id);
+
+    cout << myID << ": 1" << endl;
     
     paramD = new int[paramN * paramN];
     paramP = p;
@@ -403,6 +405,7 @@ int main(int argc,char* argv[]){
     int countK = 0;
     int countE = 0;
 
+    cout << myID << ": 2" << endl;
     while(true){
         for(int i = 0; i < paramM; i++){
             distances[i] = roundDistance(paths + i * paramN);
