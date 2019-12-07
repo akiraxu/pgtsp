@@ -382,6 +382,10 @@ int main(int argc,char* argv[]){
 
     MPI_Bcast(paramD,paramN * paramN,MPI_INT,0,MPI_COMM_WORLD);
 
+    if(id==0){
+		wtime = MPI::Wtime();
+	}
+
     int *paths = new int[paramN * paramM];
     int *paths2 = new int[paramN * paramM];
     int *distances = new int[paramM];
@@ -458,6 +462,8 @@ int main(int argc,char* argv[]){
             cout << gMinPath[i] << " ";
         }
         cout << endl;
+        wtime = MPI::Wtime() - wtime;
+        cout << "  Elapsed wall clock time = " << wtime << " seconds.\n";
     }
 
     MPI::Finalize();
