@@ -357,7 +357,7 @@ int main(int argc,char* argv[]){
 	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
 	myID = id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
 
-    updateM(paramM/p);
+    //updateM(paramM/p);
 
     initRand(id);
     
