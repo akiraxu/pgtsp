@@ -431,7 +431,7 @@ int main(int argc,char* argv[]){
             if(countR >= paramR || countK >= paramK){
                 break;
             }
-            doExchange(paths);
+            //doExchange(paths);
         }
 
         //cout << "Current round min distance: " << currmin << ", all time min: " << min << ", keep for " << countR << " rounds." << endl;
