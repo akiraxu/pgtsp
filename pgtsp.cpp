@@ -4,10 +4,10 @@
 #include <fstream>
 #include <streambuf>
 #include <math.h>
+#include <time.h>
 #include <random>
 #include <time.h>
 #include <unordered_set>
-#include "mpi.h"
 
 using namespace std;
 
@@ -233,6 +233,8 @@ int minDistanceIndex(int *arr){
 }
 
 int main(int argc,char* argv[]){
+    srand(time(NULL));
+    int thetime = time(NULL);
     //initEverything(100, 100000, 1000, 10, 0.75, 0.1, 0.05);
     initEverything(stoi(argv[1]), stoi(argv[2]), stoi(argv[3]), stoi(argv[4]), stof(argv[5]), stof(argv[6]), stof(argv[7]));
     string fn(argv[8]);
@@ -248,15 +250,6 @@ int main(int argc,char* argv[]){
         cout << "Wrong distance matrix! " << n << " Exit now..." << endl;
         exit(-1);
     }
-
-    int id;
-	int p;
-	double wtime;
-    MPI::Init(argc, argv); //  Initialize MPI.
-	p = MPI::COMM_WORLD.Get_size(); //  Get the number of processes.
-	id = MPI::COMM_WORLD.Get_rank(); //  Get the individual process ID.
-
-    wtime = MPI::Wtime();
 
     int *paths = new int[paramN * paramM];
     int *paths2 = new int[paramN * paramM];
@@ -318,10 +311,5 @@ int main(int argc,char* argv[]){
     }
     cout << endl;
 
-
-    wtime = MPI::Wtime() - wtime;
-    cout << "  Elapsed wall clock time = " << wtime << " seconds.\n";
-
-    MPI::Finalize();
-
+    cout << "  Elapsed wall clock time = " << time(NULL) - thetime << " seconds.\n";
 }
