@@ -313,7 +313,7 @@ void doExchange(int *paths){
 int getGlobalMin(int min, int *minPath, int *gMinPath){
     if(paramP < 2){
         for(int j = 0; j < paramN; j++){
-            sendMin[j] = minPath[j];
+            gMinPath[j] = minPath[j];
         }
         return min;
     }
