@@ -289,6 +289,9 @@ void setExchange(int *paths, int *ex){
 }
 
 void doExchange(int *paths){
+    if(paramP < 2){
+        return;
+    }
     int *exGet = new int[(paramM / (paramP * paramP)) * paramP * paramN];
     int *exSet = new int[(paramM / (paramP * paramP)) * paramP * paramN];
     int *len = new int[paramP];
@@ -308,6 +311,12 @@ void doExchange(int *paths){
 }
 
 int getGlobalMin(int min, int *minPath, int *gMinPath){
+    if(paramP < 2){
+        for(int j = 0; j < paramN; j++){
+            sendMin[j] = minPath[j];
+        }
+        return min;
+    }
     int *sendMin = new int[paramP * (paramN + 1)];
     int *recvMin = new int[paramP * (paramN + 1)];
     int *len = new int[paramP];
@@ -327,7 +336,7 @@ int getGlobalMin(int min, int *minPath, int *gMinPath){
     int gMin = recvMin[0];
     if(myID==0){cout << "current round mins: ";}
     for(int i = 0; i < paramP; i++){
-        if(recvMin[i * (paramN + 1)] < gMin){
+        if(recvMin[i * (paramN + 1)] <= gMin){
             gMin = recvMin[i * (paramN + 1)];
             for(int j = 0; j < paramN; j++){
                 gMinPath[j] = recvMin[i * (paramN + 1) + j + 1];
